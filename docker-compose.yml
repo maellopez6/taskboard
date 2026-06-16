@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  frontend:
+    build: ./frontend # construit l'image à partir du dossier frontend
+    ports:
+      - "8080:80" # expose le site sur http://localhost:8080
+    depends_on:
+      - backend # démarre après le backend
+    networks:
+      - app-network # connecté au réseau de l'application
+
+# api
+
+  backend:
+    build: ./backend # construit l'image backend
+    environment:
+      - DB_HOST=db 
+      - DB_USER=utilisateur1
+      - DB_PASSWORD=Password123*
+      - DB_NAME=taskdb
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db # attend que la base démarre
+    networks:
+      - app-network # même réseau que frontend et db
+
+# base de données
+
+  db:
+    image: postgres:15-alpine # image officielle PostgreSQL
+    restart: always # redémarre automatiquement si crash
+    environment:
+      - POSTGRES_USER=utilisateur1
+      - POSTGRES_PASSWORD=Password123*
+      - POSTGRES_DB=taskdb
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    # pas d'exposition de port donc sécurité respectée
+
+volumes:
+  db-data: # volume nommé garde les données même si container supprimé
+
+networks:
+  app-network:
+    driver: bridge # réseau Docker isolé
