@@ -1,5 +1,5 @@
 # build
-FROM node:18-alpine
+FROM node:14
 
 # définition du dossier de travail dans le container
 WORKDIR /taskboard

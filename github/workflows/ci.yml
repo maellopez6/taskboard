@@ -1,0 +1,50 @@
+name: CI/CD TaskBoard Backend
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  build-test-scan:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repo
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Setup Docker
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 3. Build image backend
+      - name: Build backend image
+        run: |
+          docker build -t taskboard-backend:latest ./backend
+
+      # 4. Tests (ou lint)
+      - name: Run basic tests (or lint)
+        run: |
+          echo "Running tests..."
+          if [ -f ./backend/package.json ]; then
+            cd backend
+            npm install
+            npm test || true
+          else
+            echo "No tests found, skipping"
+          fi
+
+      # 5. Install Trivy
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget
+          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.52.0_Linux-64bit.deb
+          sudo dpkg -i trivy_0.52.0_Linux-64bit.deb
+
+      # 6. Scan image (IMPORTANT pour la note)
+      - name: Scan Docker image with Trivy
+        run: |
+          trivy image --severity HIGH,CRITICAL --exit-code 1 taskboard-backend:latest

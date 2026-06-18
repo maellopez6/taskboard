@@ -1,0 +1,11 @@
+groups:
+  - name: node-alerts
+    rules:
+      - alert: NodeExporterDown
+        expr: up{job="node_exporter"} == 0
+        for: 10s
+        labels:
+          severity: critical
+        annotations:
+          summary: "node_exporter est DOWN"
+          description: "Le service node_exporter ne répond plus"
