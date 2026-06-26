@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: taskboard
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: taskboard-config
+  namespace: taskboard
+data:
+  DB_HOST: taskboard-db
+  DB_NAME: taskdb
+  DB_USER: utilisateur1
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: taskboard-secret
+  namespace: taskboard
+type: Opaque
+stringData:
+  DB_PASSWORD: Password123*

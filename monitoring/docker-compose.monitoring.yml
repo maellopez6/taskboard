@@ -20,17 +20,17 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
 
   alertmanager:
-  image: prom/alertmanager
-  volumes:
-    - ./alertmanager.yml:/etc/alertmanager/config.yml
-  command:
-    - "--config.file=/etc/alertmanager/config.yml"
-  ports:
-    - "9093:9093"
+    image: prom/alertmanager
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/config.yml
+    command:
+      - "--config.file=/etc/alertmanager/config.yml"
+    ports:
+      - "9093:9093"
 
   mailhog:
     image: mailhog/mailhog

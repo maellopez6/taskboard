@@ -1,0 +1,10 @@
+groups:
+- name: taskboard-alerts
+  rules:
+  - alert: NodeExporterDown
+    expr: up{job="node"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Node Exporter indisponible"

@@ -1,3 +1,4 @@
+# variables non sensibles 
 apiVersion: v1
 kind: ConfigMap
 metadata:
